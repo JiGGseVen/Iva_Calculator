@@ -17,13 +17,21 @@ namespace Iva_Calculator_Prism.Services
         {
             if (!File.Exists(settingsFilePath)) // create config file with default values
             {
-                using (FileStream fs = new FileStream(settingsFilePath, FileMode.Create))
+                try
                 {
-                    XmlSerializer xs = new XmlSerializer(typeof(AppSettings));
-                    AppSettings sxml = new AppSettings();
-                    xs.Serialize(fs, sxml);
-                    return sxml;
+                    using (FileStream fs = new FileStream(settingsFilePath, FileMode.Create))
+                    {
+                        XmlSerializer xs = new XmlSerializer(typeof(AppSettings));
+                        AppSettings sxml = new AppSettings();
+                        xs.Serialize(fs, sxml);
+                        return sxml;
+                    }
                 }
+                catch (Exception)
+                {
+                    throw new FileLoadException();
+                }
+                
             }
             else // read configuration from file
             {

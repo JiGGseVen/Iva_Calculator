@@ -65,6 +65,12 @@
                     <DataGridTextColumn Header="Codigo Devolucao" Binding="{Binding ProductReturnCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="*" />
                     <DataGridTextColumn Header="Codigo Desconto" Binding="{Binding ProductDiscountCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="*" />
                 </DataGrid.Columns>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="CellEditEnding">
+                        <i:InvokeCommandAction Command="{Binding CellEditingEndingCommand}"
+                             CommandParameter="{Binding ElementName=sellListDataGrid,  Path=SelectedItem}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
             </DataGrid>
         </Grid>
 
@@ -76,6 +82,8 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
@@ -85,16 +93,16 @@
                     Margin="5,0" 
                     Command="{Binding RaiseAddCompanyPopupViewCommand}"
                     />
-            
+
             <Button Grid.Row="1" Content="Remover" Grid.Column="1" 
                     Margin="5,0" 
                     Command="{Binding RemoveCompanyCommand}"
                     CommandParameter="{Binding ElementName=CompaniesList, Path=SelectedItem}"
                     />
-
+            
             <ListBox x:Name="CompaniesList"
                  Margin="5"
-                 Grid.Row="2"
+                 Grid.Row="4"
                  BorderThickness="2"
                  Grid.ColumnSpan="2"
                  SelectionMode="Single"
@@ -128,7 +136,11 @@
             <PlexPrism:InteractionRequestTrigger SourceObject="{Binding ConfirmationRequest, Mode=OneWay}">
                 <PlexPrism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"/>
             </PlexPrism:InteractionRequestTrigger>
-      </i:Interaction.Triggers>
+
+            <PlexPrism:InteractionRequestTrigger SourceObject="{Binding SavedChangesNotification, Mode=OneWay}">
+                <PlexPrism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"/>
+            </PlexPrism:InteractionRequestTrigger>
+        </i:Interaction.Triggers>
         
     </Grid>
 </UserControl>

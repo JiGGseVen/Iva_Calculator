@@ -75,6 +75,7 @@ namespace Iva_Calculator_Prism.ViewModels
         public DelegateCommand<object> CellEditingEndingCommand { get; set; }
         public InteractionRequest<CompanyNameAddedNotification> AddCompanyPopupViewRequest { get; private set; }
         public InteractionRequest<IConfirmation> ConfirmationRequest { get; private set; }
+        public InteractionRequest<IConfirmation> DeleteCompanySettingsRequest { get; private set; }
 
         private CompanySettings CurrentCompany;
 
@@ -87,15 +88,25 @@ namespace Iva_Calculator_Prism.ViewModels
             RaiseAddCompanyPopupViewCommand = new DelegateCommand(RaiseAddCompanyPopupView);
             CellEditingEndingCommand = new DelegateCommand<object>(CellEditingFinished);
             ConfirmationRequest = new InteractionRequest<IConfirmation>();
+            DeleteCompanySettingsRequest = new InteractionRequest<IConfirmation>();
 
-            CompaniesList = new ObservableCollection<CompanySettings>();
+        CompaniesList = new ObservableCollection<CompanySettings>();
             CompanyBoughtList = new ObservableCollection<BoughtProduct>();
             CompanySoldList = new ObservableCollection<SoldProduct>();
         }
 
         private void CellEditingFinished(object obj)
         {
-            
+            if (CurrentCompany.BoughtProductsList.Count != CompanyBoughtList.Count)
+            {
+                CurrentCompany.BoughtProductsList = CompanyBoughtList;
+            }
+            else if (CurrentCompany.SoldProductsList.Count != CompanySoldList.Count)
+            {
+                CurrentCompany.SoldProductsList = CompanySoldList;
+            }
+
+            FileIOService.SaveAppSettings(AppSettings);
         }
 
         private void RaiseAddCompanyPopupView()
@@ -127,9 +138,12 @@ namespace Iva_Calculator_Prism.ViewModels
 
         private void RemoveSelectedCompany(CompanySettings selectedCompany)
         {
-            CompaniesList.Remove(selectedCompany);
+            var result = DeleteCompanySettingsDialog();
+
+            if (result)
+                CompaniesList.Remove(selectedCompany);
         }
-        
+
         private void CompaniesListSelectionChanged(CompanySettings selectedCompany)
         {
             CurrentCompany = selectedCompany;
@@ -225,6 +239,19 @@ namespace Iva_Calculator_Prism.ViewModels
 
             return interactionResult;
         }
+
+        private bool DeleteCompanySettingsDialog()
+        {
+            bool interactionResult = false;
+            
+            ConfirmationRequest.Raise(
+                new Confirmation { Content = "Tem a certeza que deseja remover as definicoes desta empresa?", Title = "Remove definicoes de empresa" },
+                c => { interactionResult = c.Confirmed ? true : false; });
+
+            return interactionResult;
+        }
+
+
         
     }
 }

@@ -97,7 +97,8 @@ namespace Iva_Calculator_Prism.ViewModels
         private void OpenSaftFile()
         {
             Stream stream = FileIOService.LoadSaftFileData();
-            LoadCompanieSaftValues(stream);
+            if (stream != null)
+                LoadCompanieSaftValues(stream);
         }
 
         private void SelectedCompanyChanged(CompanySettings companySettings)

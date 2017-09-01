@@ -26,12 +26,15 @@ namespace Iva_Calculator_Prism.Services
 
         public XmlDataService(Stream fileStream)
         {
-            doc = new XmlDocument();
-            doc.Load(fileStream);
+            if(fileStream != null)
+            {
+                doc = new XmlDocument();
+                doc.Load(fileStream);
 
-            // Select a list of nodes
-            generalLedgerEntries = doc.GetElementsByTagName("GeneralLedgerEntries")[0];
-            RetrieveAllValuesOfElement(generalLedgerEntries);
+                // Select a list of nodes
+                generalLedgerEntries = doc.GetElementsByTagName("GeneralLedgerEntries")[0];
+                RetrieveAllValuesOfElement(generalLedgerEntries);
+            }
         }
 
         public void RetrieveAllValuesOfElement(XmlNode node)
