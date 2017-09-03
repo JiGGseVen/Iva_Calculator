@@ -111,9 +111,15 @@ namespace Iva_Calculator_Prism.Services
 
                                 foreach (XmlNode lineNode in transactionNode.ChildNodes)
                                 {
-                                    if (lineNode.Name == "Line")
+                                    if (lineNode.Name == "Lines")
                                     {
-                                        nodeLines.Add(lineNode);
+                                        foreach (XmlNode childLineNode in lineNode.ChildNodes)
+                                        {
+                                            if(childLineNode.Name == "DebitLine" || childLineNode.Name == "CreditLine")
+                                            {
+                                                nodeLines.Add(childLineNode);
+                                            }
+                                        }
                                     }
                                 }
 

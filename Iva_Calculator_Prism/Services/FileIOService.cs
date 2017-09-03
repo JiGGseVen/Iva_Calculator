@@ -7,12 +7,13 @@ using System.IO;
 using System.Xml.Serialization;
 using Iva_Calculator_Prism.Models;
 using Microsoft.Win32;
+using System.Diagnostics;
 
 namespace Iva_Calculator_Prism.Services
 {
     public static class FileIOService
     {
-        private static readonly string settingsFilePath = AppDomain.CurrentDomain.BaseDirectory + "config2.xml";
+        private static readonly string settingsFilePath = AppDomain.CurrentDomain.BaseDirectory + "config.xml";
         public static AppSettings GetAppSettings()
         {
             if (!File.Exists(settingsFilePath)) // create config file with default values
@@ -55,6 +56,7 @@ namespace Iva_Calculator_Prism.Services
             {
                 XmlSerializer xs = new XmlSerializer(typeof(AppSettings));
                 xs.Serialize(fs, appSettings);
+                fs.SetLength(fs.Position);
                 return true;
             }
         }

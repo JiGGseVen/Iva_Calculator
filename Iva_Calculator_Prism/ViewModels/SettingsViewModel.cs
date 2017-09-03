@@ -90,7 +90,7 @@ namespace Iva_Calculator_Prism.ViewModels
             ConfirmationRequest = new InteractionRequest<IConfirmation>();
             DeleteCompanySettingsRequest = new InteractionRequest<IConfirmation>();
 
-        CompaniesList = new ObservableCollection<CompanySettings>();
+            CompaniesList = new ObservableCollection<CompanySettings>();
             CompanyBoughtList = new ObservableCollection<BoughtProduct>();
             CompanySoldList = new ObservableCollection<SoldProduct>();
         }
@@ -129,6 +129,10 @@ namespace Iva_Calculator_Prism.ViewModels
                                         BoughtProductsList = new ObservableCollection<BoughtProduct>(),
                                         SoldProductsList = new ObservableCollection<SoldProduct>()
                                     });
+
+                                    AppSettings.CompanySettingsList = CompaniesList.ToList();
+
+                                    SaveCurrentSettings();
                                 }
                             });
 
@@ -141,7 +145,12 @@ namespace Iva_Calculator_Prism.ViewModels
             var result = DeleteCompanySettingsDialog();
 
             if (result)
+            {
                 CompaniesList.Remove(selectedCompany);
+            }
+
+            AppSettings.CompanySettingsList = CompaniesList.ToList();
+            SaveCurrentSettings();
         }
 
         private void CompaniesListSelectionChanged(CompanySettings selectedCompany)
@@ -201,8 +210,8 @@ namespace Iva_Calculator_Prism.ViewModels
 
         private bool VerifyChangeOnCollection()
         {
-            if (!CurrentCompany.BoughtProductsList.SequenceEqual(CompanyBoughtList) || 
-                    !CurrentCompany.SoldProductsList.SequenceEqual(CompanySoldList))
+            if ( CurrentCompany != null && (!CurrentCompany.BoughtProductsList.SequenceEqual(CompanyBoughtList) || 
+                    !CurrentCompany.SoldProductsList.SequenceEqual(CompanySoldList)))
             {
                 if (ShowSaveChangesDialog())
                 {

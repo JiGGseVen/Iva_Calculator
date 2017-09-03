@@ -99,7 +99,7 @@
                     Command="{Binding RemoveCompanyCommand}"
                     CommandParameter="{Binding ElementName=CompaniesList, Path=SelectedItem}"
                     />
-            
+
             <ListBox x:Name="CompaniesList"
                  Margin="5"
                  Grid.Row="4"
